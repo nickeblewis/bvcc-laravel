@@ -41,7 +41,52 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'site' => fn (): array => $this->site(),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+        ];
+    }
+
+    /**
+     * What the public layout needs on every page: the club's identity and
+     * the navigation. Kept small, as it is sent with every response.
+     *
+     * @return array<string, mixed>
+     */
+    private function site(): array
+    {
+        return [
+            'name' => config('site.name'),
+            'shortName' => config('site.short_name'),
+            'tagline' => config('site.tagline'),
+            'email' => config('site.email'),
+            'founded' => config('site.founded'),
+            'governingBody' => config('site.governing_body'),
+            'social' => array_filter((array) config('site.social')),
+            'nav' => [
+                ['label' => 'Paddle with us', 'href' => '/paddle'],
+                ['label' => 'Events and trips', 'href' => '/events'],
+                ['label' => 'Join', 'href' => '/join'],
+                ['label' => 'News', 'href' => '/news'],
+                ['label' => 'Club', 'href' => '/club'],
+                ['label' => 'Contact', 'href' => '/contact'],
+            ],
+            'footer' => [
+                'Paddling' => [
+                    ['label' => 'Weekly sessions', 'href' => '/paddle/weekly-sessions'],
+                    ['label' => 'Beginners and coaching', 'href' => '/paddle/beginners'],
+                    ['label' => 'Where we paddle', 'href' => '/venues'],
+                    ['label' => 'Events calendar', 'href' => '/events'],
+                    ['label' => 'Equipment hire', 'href' => '/join/hire'],
+                ],
+                'Club' => [
+                    ['label' => 'Membership and fees', 'href' => '/join'],
+                    ['label' => 'About and committee', 'href' => '/club'],
+                    ['label' => 'Documents and policies', 'href' => '/club/documents'],
+                    ['label' => 'Safeguarding', 'href' => '/club/safeguarding'],
+                    ['label' => 'Privacy policy', 'href' => '/club/privacy-policy'],
+                    ['label' => 'FAQs', 'href' => '/faqs'],
+                ],
+            ],
         ];
     }
 }

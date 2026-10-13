@@ -7,7 +7,61 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * The "Blackwater" palette for the public site. See docs/design.md.
+ * ink: the club's black, as deep river water. river: teal to aqua.
+ * gold: the logo's yellow, the one accent, kept for calls to action.
+ */
+@theme {
+    --color-ink-950: #04121a;
+    --color-ink-900: #071c27;
+    --color-ink-800: #0b2a39;
+    --color-ink-700: #10394c;
+    --color-ink-600: #174c63;
+
+    --color-river-50: #eefbfa;
+    --color-river-100: #d5f5f2;
+    --color-river-200: #aeeae6;
+    --color-river-300: #77d8d5;
+    --color-river-400: #3fbdbd;
+    --color-river-500: #20a0a3;
+    --color-river-600: #178186;
+    --color-river-700: #17676c;
+    --color-river-800: #185358;
+    --color-river-900: #18454a;
+
+    --color-gold-300: #ffe680;
+    --color-gold-400: #ffd43b;
+    --color-gold-500: #f5c400;
+    --color-gold-600: #c79a00;
+    --color-gold-700: #8a6a00;
+
+    --color-foam: #f6fbfa;
+    --color-mist: #e4f1f0;
+
+    --font-display:
+        'Bricolage Grotesque', 'Instrument Sans', ui-sans-serif, system-ui,
+        sans-serif;
+
+    --animate-drift: drift 28s linear infinite;
+    --animate-drift-slow: drift 44s linear infinite;
+
+    @keyframes drift {
+        to {
+            transform: translateX(-50%);
+        }
+    }
+}
+
 @theme inline {
+    /* Semantic colours that switch with light and dark mode. */
+    --color-page: var(--site-page);
+    --color-panel: var(--site-panel);
+    --color-fg: var(--site-fg);
+    --color-soft: var(--site-soft);
+    --color-line: var(--site-line);
+    --color-link: var(--site-link);
+
     --font-sans:
         Instrument Sans, ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
@@ -90,6 +144,13 @@
 }
 
 :root {
+    --site-page: var(--color-foam);
+    --site-panel: #ffffff;
+    --site-fg: var(--color-ink-900);
+    --site-soft: #44606a;
+    --site-line: #cfe3e2;
+    --site-link: var(--color-river-700);
+
     --background: hsl(0 0% 100%);
     --foreground: hsl(0 0% 3.9%);
     --card: hsl(0 0% 100%);
@@ -127,6 +188,13 @@
 }
 
 .dark {
+    --site-page: var(--color-ink-950);
+    --site-panel: var(--color-ink-800);
+    --site-fg: #e9f5f4;
+    --site-soft: #a3c0c4;
+    --site-line: var(--color-ink-600);
+    --site-link: var(--color-river-300);
+
     --background: hsl(0 0% 3.9%);
     --foreground: hsl(0 0% 98%);
     --card: hsl(0 0% 3.9%);
@@ -168,5 +236,177 @@
     }
     body {
         @apply bg-background text-foreground;
+    }
+}
+
+/*
+ * Public site. Everything below is scoped to .site (set on the site layout)
+ * so the starter kit's account pages keep their own look.
+ */
+@layer base {
+    .site {
+        @apply bg-page text-fg;
+        font-size: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+        line-height: 1.65;
+    }
+
+    .site :is(h1, h2, h3) {
+        font-family: var(--font-display);
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        text-wrap: balance;
+    }
+
+    .site :focus-visible {
+        outline: 3px solid var(--color-gold-400);
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+}
+
+@layer components {
+    /* Fluid type: sized for a 360px phone and scaled up, never the other way. */
+    .text-hero {
+        font-size: clamp(2.25rem, 1.35rem + 4.4vw, 4.5rem);
+        font-weight: 800;
+    }
+
+    .text-title {
+        font-size: clamp(1.875rem, 1.4rem + 2.4vw, 3.25rem);
+        font-weight: 800;
+    }
+
+    .text-heading {
+        font-size: clamp(1.5rem, 1.25rem + 1.2vw, 2.25rem);
+        font-weight: 700;
+    }
+
+    .shell {
+        @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .section {
+        @apply py-12 sm:py-16 lg:py-20;
+    }
+
+    /* Buttons are at least 44px tall: a comfortable thumb target. */
+    .btn {
+        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-base leading-tight font-semibold transition-colors;
+    }
+
+    .btn-gold {
+        @apply bg-gold-400 text-ink-950 hover:bg-gold-300;
+    }
+
+    .btn-ink {
+        @apply bg-ink-800 text-white hover:bg-ink-700 dark:bg-river-200 dark:text-ink-950 dark:hover:bg-river-100;
+    }
+
+    .btn-outline {
+        @apply border-2 border-current bg-transparent hover:bg-black/5 dark:hover:bg-white/10;
+    }
+
+    .card {
+        @apply rounded-2xl border border-line bg-panel shadow-sm shadow-ink-900/5;
+    }
+
+    .link {
+        @apply font-medium text-link underline decoration-river-400/60 decoration-2 underline-offset-4 hover:decoration-current;
+    }
+
+    .eyebrow {
+        @apply text-sm font-semibold tracking-widest text-link uppercase;
+    }
+
+    /* Forms: every control has a visible label; see FormField.vue. */
+    .field-input {
+        @apply block min-h-11 w-full rounded-xl border border-line bg-panel px-3.5 py-2.5 text-base text-fg placeholder:text-soft/70;
+    }
+
+    .field-input[aria-invalid='true'] {
+        @apply border-red-600;
+    }
+
+    /* Editor-written content rendered from Markdown. */
+    .prose-site {
+        @apply max-w-prose;
+    }
+
+    .prose-site > * + * {
+        margin-top: 1.1em;
+    }
+
+    .prose-site h2 {
+        font-size: clamp(1.5rem, 1.25rem + 1.2vw, 2.25rem);
+        font-weight: 700;
+        margin-top: 1.8em;
+    }
+
+    .prose-site h3 {
+        @apply text-xl font-bold;
+        margin-top: 1.5em;
+    }
+
+    .prose-site a {
+        @apply font-medium text-link underline decoration-river-400/60 decoration-2 underline-offset-4 hover:decoration-current;
+        overflow-wrap: anywhere;
+    }
+
+    .prose-site ul {
+        @apply list-disc pl-5;
+    }
+
+    .prose-site ol {
+        @apply list-decimal pl-5;
+    }
+
+    .prose-site li + li {
+        margin-top: 0.4em;
+    }
+
+    .prose-site li::marker {
+        color: var(--color-river-500);
+    }
+
+    .prose-site blockquote {
+        @apply border-l-4 border-river-400 pl-4 text-soft italic;
+    }
+
+    .prose-site img {
+        @apply rounded-xl;
+    }
+
+    .prose-site hr {
+        @apply border-line;
+    }
+
+    /* Wide tables scroll inside themselves instead of stretching the page. */
+    .prose-site table {
+        @apply block w-full overflow-x-auto text-left text-[0.95em];
+        border-collapse: collapse;
+    }
+
+    .prose-site :is(th, td) {
+        @apply border-b border-line px-3 py-2 align-top;
+    }
+
+    .prose-site th {
+        @apply font-semibold whitespace-nowrap;
+    }
+
+    /* The flowing contour lines behind heroes: like a river on a map. */
+    .contours {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='240' viewBox='0 0 480 240' fill='none' stroke='%2377d8d5' stroke-opacity='.16' stroke-width='1.5'%3E%3Cpath d='M0 40c60-30 120 30 180 0s120-30 180 0 90 20 120 0M0 100c70-36 110 36 180 0s110-36 180 0 90 24 120 0M0 160c50-24 130 24 180 0s130-24 180 0 80 16 120 0M0 220c60-30 120 30 180 0s120-30 180 0 90 20 120 0'/%3E%3C/svg%3E");
+        background-size: 480px 240px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .site *,
+    .site *::before,
+    .site *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
     }
 }
