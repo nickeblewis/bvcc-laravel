@@ -19,7 +19,26 @@ composer dev                        # http://localhost:8000
 
 Admin: `/admin`, as `admin@bvcc.test` / `password` (local demo data only).
 There is a demo login for each role: `membership@`, `events@`, `treasurer@`,
-`welfare@`, `leader@` and `editor@bvcc.test`.
+`welfare@`, `leader@` and `editor@bvcc.test`. `member@bvcc.test` is a
+member's login: it sees only My membership. Members log in or register from
+**Login** in the site nav.
+
+To add a staff login (including the first administrator on a fresh server):
+
+```sh
+php artisan bvcc:staff    # asks for name, email, role (default Admin) and password
+```
+
+Email: locally, everything the app sends goes to [Mailpit](https://mailpit.axllent.org),
+which `composer dev` starts when it is installed. Read it at http://localhost:8025
+(verification and password reset links work from there). To install it without sudo:
+
+```sh
+curl -fsSL https://github.com/axllent/mailpit/releases/latest/download/mailpit-linux-amd64.tar.gz \
+  | tar -xz -C ~/.local/bin mailpit
+```
+
+Without Mailpit, set `MAIL_MAILER=log` in `.env` and read emails in `storage/logs/laravel.log`.
 
 For server-rendered pages, run `npm run build:ssr` then `php artisan inertia:start-ssr`.
 

@@ -137,8 +137,7 @@ it('serves a news feed', function () {
     $this->get('/news/feed.xml')->assertOk()->assertSee('<title>Pool sessions are back</title>', false);
 });
 
-it('does not offer public registration', function () {
-    // The old site's /register address now leads to the Join page; there is no sign-up form.
-    $this->get('/register')->assertRedirect('/join');
-    $this->post('/register', ['email' => 'x@example.com'])->assertStatus(405);
+it('offers member registration at the old site\'s /register address', function () {
+    // F-50: see tests/Feature/Auth/MemberAccountsTest.php.
+    $this->get('/register')->assertOk();
 });

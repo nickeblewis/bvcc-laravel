@@ -28,6 +28,11 @@ class ClubStats extends StatsOverviewWidget
 
     protected ?string $pollingInterval = null;
 
+    public static function canView(): bool
+    {
+        return Staff::user()?->isStaff() ?? false;
+    }
+
     /**
      * @return list<Stat>
      */

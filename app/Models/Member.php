@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * A person known to the club: a member, a family member covered by someone
@@ -26,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $email
  * @property list<array{name?: string, relationship?: string, phone?: string}>|null $emergency_contacts
  * @property string|null $medical_notes
+ * @property-read User|null $user
  */
 class Member extends Model
 {
@@ -71,6 +73,16 @@ class Member extends Model
     public function memberships(): BelongsToMany
     {
         return $this->belongsToMany(Membership::class);
+    }
+
+    /**
+     * The member's own login, if they have one (F-50).
+     *
+     * @return HasOne<User, $this>
+     */
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class);
     }
 
     /**

@@ -37,12 +37,15 @@ class DemoSeeder extends Seeder
         ];
 
         foreach ($staff as [$name, $email, $role]) {
-            User::firstOrCreate(['email' => $email], [
+            $user = User::firstOrCreate(['email' => $email], [
                 'name' => $name,
                 'password' => 'password',
                 'role' => $role,
-                'email_verified_at' => now(),
             ]);
+
+            if (! $user->hasVerifiedEmail()) {
+                $user->markEmailAsVerified();
+            }
         }
 
         if (Member::exists()) {
@@ -94,6 +97,17 @@ class DemoSeeder extends Seeder
         }
 
         $memberships->expireLapsed();
+
+        // A member's own login (F-50), on someone with a membership.
+        $member = $members->get(1);
+        $member->update(['email' => 'member@bvcc.test']);
+        User::create([
+            'name' => $member->name,
+            'email' => 'member@bvcc.test',
+            'password' => 'password',
+            'role' => UserRole::Member,
+            'member_id' => $member->id,
+        ])->markEmailAsVerified();
 
         // Bookings on the upcoming trips and the next two sessions.
         $events = Event::upcoming()->where('status', EventStatus::Published)->limit(6)->get();

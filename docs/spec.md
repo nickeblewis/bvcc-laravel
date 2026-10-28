@@ -61,8 +61,10 @@ API exposes only 32 photos; the rest sit in page galleries.
 | Contact          | `/contact` | Form routed to role inboxes                                               | `/contact-us/`                               |
 
 Also: `/faqs` (replaces the old Help section). Editable pages live at
-`/{paddle|join|club}/{slug}`. The old Log In, My Account and Help items are
-gone until Phase 3.
+`/{paddle|join|club}/{slug}`. The old Help item is now `/faqs`. **Login**
+(`/login`, with Register and Forgotten password) is back as the last nav item
+and becomes My account once you're logged in (F-50, see
+[members.md](members.md)).
 
 **Home page, in order:** hero with "Come and try it"; next weekly session;
 disciplines; upcoming trips and events; why paddle with us; venues;
@@ -178,8 +180,8 @@ kept in the admin (Website > Committee), not in code or this doc.
 | F-48        | Extra costs on a booking                  | ☐             | Accommodation and similar charges as lines on a booking, so they can be chased too.                                                                                                                                                                                                |
 | F-49        | Leader role limits                        | ☐             | Leaders can currently edit any event. Limit them to their own events and registers.                                                                                                                                                                                                |
 | **Phase 3** | **Member self-service**                   |               |                                                                                                                                                                                                                                                                                    |
-| F-50        | Member accounts                           | ☐             | Log in with the kept Fortify pages; link a `User` to a `Member`.                                                                                                                                                                                                                   |
-| F-51        | Join and renew online                     | ☐             | Pick a tier, eligibility checks, details and consents, then pay or get payment instructions.                                                                                                                                                                                       |
+| F-50        | Member accounts                           | 🔨            | Built 2026-10-28, not yet run (PHP missing on the dev machine): Login in the nav, sign-up with a tier, forgotten password, Member role, My membership. See [members.md](members.md).                                                                                               |
+| F-51        | Join and renew online                     | ☐             | Sign-up and tier choice are done in F-50 and leave a pending membership. Still to do: eligibility checks, payment instructions or payment, renewal.                                                                                                                                |
 | F-52        | Book online                               | ☐             | "Book a place" on the event page creates a pending booking; replaces "Email to book".                                                                                                                                                                                              |
 | F-53        | My bookings                               | ☐             | See, pay for and cancel bookings.                                                                                                                                                                                                                                                  |
 | F-54        | Family participants                       | ☐             | Manage the people on a family membership.                                                                                                                                                                                                                                          |
@@ -229,6 +231,9 @@ Status: ☐ planned, 🔨 in progress, ✅ done (with date), ⏸ parked.
 - **Is Clubmark accreditation current?** The site says so, as the old one did.
 - **"What to bring" and swimming ability** for beginners: the wording here is
   a sensible placeholder, not the club's own.
+- **Member accounts** (F-50): linking a sign-up to an existing member record,
+  committee approval of new members, under-18 sign-ups and what members may
+  edit. See [members.md](members.md#open-questions).
 - **How do monthly subscribers pay today** (standing order, PayPal)? Shapes F-43.
 - **Should risk assessments and operating procedures be public** or members-only?
 - **Retention period and consent wording** for medical and child data.
@@ -248,7 +253,7 @@ Set these on the server. Don't commit secrets. Local defaults are in `.env.examp
 | `APP_URL`                                                                             | Yes            | `https://bvcc.org.uk`  | Canonical links, sitemap, structured data and links in email.                                                                                        |
 | `APP_KEY`                                                                             | Yes            | _(generated)_          | Encrypts sessions and members' emergency and medical details. Losing it loses that data: back it up.                                                 |
 | `DB_CONNECTION`, `DB_URL`                                                             | Yes            | `pgsql`                | Database. SQLite locally.                                                                                                                            |
-| `MAIL_MAILER` and its settings                                                        | Yes, for email | `resend`               | Reminders, cancellations, enquiries. `log` locally.                                                                                                  |
+| `MAIL_MAILER` and its settings                                                        | Yes, for email | `resend`               | Reminders, cancellations, enquiries. Locally `smtp` to Mailpit on port 1025.                                                                         |
 | `MAIL_FROM_ADDRESS`, `MAIL_FROM_NAME`                                                 | Yes            | `noreply@bvcc.org.uk`  | Sender. Must be on a verified domain.                                                                                                                |
 | `SITE_PAYMENT_INSTRUCTIONS`                                                           | Recommended    | _(how to pay)_         | The line in payment reminder emails. The place for bank details; never shown on public pages.                                                        |
 | `SITE_EMAIL`, `SITE_BOOKINGS_EMAIL`, `SITE_MEMBERSHIPS_EMAIL`, `SITE_EQUIPMENT_EMAIL` | No             | `bookings@bvcc.org.uk` | Role inboxes; defaults in `config/site.php`.                                                                                                         |

@@ -8,7 +8,6 @@ use App\Enums\PageSection;
 use App\Mail\HireRequestMail;
 use App\Models\Faq;
 use App\Models\HireRequest;
-use App\Models\MembershipTier;
 use App\Models\Page;
 use App\Services\FeeCalculator;
 use App\Support\Money;
@@ -28,14 +27,7 @@ class JoinController extends SiteController
         $faqs = Faq::published()->where('category', 'membership')->get();
 
         return $this->page('join/Index', [
-            'tiers' => MembershipTier::where('on_sale', true)->orderBy('sort')->get()->map(fn (MembershipTier $tier): array => [
-                'name' => $tier->name,
-                'price' => $tier->initial_pence === 0 ? 'Free' : Money::format($tier->initial_pence),
-                'monthly' => $tier->monthly_pence > 0 ? Money::format($tier->monthly_pence) : null,
-                'eligibility' => $tier->getAttribute('eligibility'),
-                'description' => $tier->getAttribute('description'),
-                'band' => $tier->fee_band->getLabel(),
-            ]),
+            'tiers' => Present::tiers(),
             // The fee table is built from the same rates the booking system charges.
             'feeTable' => [
                 'columns' => array_map(fn (FeeType $type): string => $type->getLabel(), FeeType::standard()),

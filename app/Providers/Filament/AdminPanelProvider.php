@@ -27,6 +27,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->passwordReset()
+            // Members sign up themselves (F-50), so the address must be proved.
+            ->emailVerification()
             ->profile()
             ->brandName(config('site.short_name').' admin')
             ->colors([

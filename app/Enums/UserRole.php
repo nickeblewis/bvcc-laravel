@@ -13,6 +13,23 @@ enum UserRole: string implements HasLabel
     case Welfare = 'welfare';
     case Leader = 'leader';
     case Editor = 'editor';
+    case Member = 'member';
+
+    /**
+     * The roles that run the club, as opposed to members who log in to see
+     * their own membership.
+     *
+     * @return list<self>
+     */
+    public static function staff(): array
+    {
+        return array_values(array_filter(self::cases(), fn (self $role): bool => $role->isStaff()));
+    }
+
+    public function isStaff(): bool
+    {
+        return $this !== self::Member;
+    }
 
     public function getLabel(): string
     {
@@ -24,6 +41,7 @@ enum UserRole: string implements HasLabel
             self::Welfare => 'Welfare officer',
             self::Leader => 'Session or trip leader',
             self::Editor => 'Website editor',
+            self::Member => 'Member',
         };
     }
 
@@ -40,6 +58,8 @@ enum UserRole: string implements HasLabel
             self::Welfare => [Area::Members, Area::Medical, Area::Bookings],
             self::Leader => [Area::Events, Area::Bookings],
             self::Editor => [Area::Content, Area::Enquiries],
+            // Members see only their own pages (Filament\Pages\MyMembership).
+            self::Member => [],
         };
     }
 

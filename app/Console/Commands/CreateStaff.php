@@ -23,7 +23,7 @@ class CreateStaff extends Command
         $data = [
             'name' => text('Name', required: true),
             'email' => text('Email', required: true),
-            'role' => select('Role', collect(UserRole::cases())->mapWithKeys(fn (UserRole $r) => [$r->value => $r->getLabel()])->all(), UserRole::Admin->value),
+            'role' => select('Role', collect(UserRole::staff())->mapWithKeys(fn (UserRole $r) => [$r->value => $r->getLabel()])->all(), UserRole::Admin->value),
             'password' => password('Password', required: true),
         ];
 
@@ -38,7 +38,7 @@ class CreateStaff extends Command
             return self::FAILURE;
         }
 
-        User::create([...$data, 'email_verified_at' => now()]);
+        User::create($data)->markEmailAsVerified();
 
         $this->info('Created. They can sign in at '.url('/admin'));
 
