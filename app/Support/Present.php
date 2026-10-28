@@ -7,6 +7,7 @@ use App\Models\Article;
 use App\Models\Discipline;
 use App\Models\Event;
 use App\Models\Faq;
+use App\Models\MembershipTier;
 use App\Models\Page;
 use App\Models\Venue;
 use App\Services\FeeCalculator;
@@ -201,6 +202,24 @@ class Present
         return $faqs->map(fn (Faq $faq): array => [
             'question' => $faq->question,
             'html' => Markdown::html($faq->answer),
+        ])->values()->all();
+    }
+
+    /**
+     * The membership tiers on sale, for the Join page and the sign-up form.
+     *
+     * @return array<int, array{id: int, name: string, price: string, monthly: string|null, eligibility: string|null, description: string|null, band: string}>
+     */
+    public static function tiers(): array
+    {
+        return MembershipTier::where('on_sale', true)->orderBy('sort')->get()->map(fn (MembershipTier $tier): array => [
+            'id' => $tier->id,
+            'name' => $tier->name,
+            'price' => $tier->initial_pence === 0 ? 'Free' : Money::format($tier->initial_pence),
+            'monthly' => $tier->monthly_pence > 0 ? Money::format($tier->monthly_pence) : null,
+            'eligibility' => $tier->getAttribute('eligibility'),
+            'description' => $tier->getAttribute('description'),
+            'band' => $tier->fee_band->getLabel(),
         ])->values()->all();
     }
 }

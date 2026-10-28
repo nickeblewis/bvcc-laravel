@@ -3,12 +3,13 @@
 Planning and specs for the site, written in Markdown and kept next to the
 code. Nothing in this folder is served by the app.
 
-| Doc                    | What it's for                                                                                                                                                     |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [spec.md](spec.md)     | The living spec: goals, the old site, information architecture, business rules, roadmap, feature backlog, environment variables, go-live list and open questions. |
-| [admin.md](admin.md)   | Members, memberships, events, bookings and payments: glossary, data model, states and acceptance criteria.                                                        |
-| [design.md](design.md) | The water-inspired design system: palette, type, components, motion and the mobile rules.                                                                         |
-| [seo.md](seo.md)       | How the site is made easy to find, for search engines (SEO) and for AI assistants (AEO).                                                                          |
+| Doc                      | What it's for                                                                                                                                                     |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [spec.md](spec.md)       | The living spec: goals, the old site, information architecture, business rules, roadmap, feature backlog, environment variables, go-live list and open questions. |
+| [admin.md](admin.md)     | Members, memberships, events, bookings and payments: glossary, data model, states and acceptance criteria.                                                        |
+| [members.md](members.md) | Member accounts: login, sign-up, forgotten password and the Member role (F-50 onwards), with the decisions and a change log.                                      |
+| [design.md](design.md)   | The water-inspired design system: palette, type, components, motion and the mobile rules.                                                                         |
+| [seo.md](seo.md)         | How the site is made easy to find, for search engines (SEO) and for AI assistants (AEO).                                                                          |
 
 ## How the pieces fit
 
@@ -23,7 +24,8 @@ flowchart LR
     services --> mail[Email<br>reminders, cancellations]
     site --> forms[Contact and hire forms] --> db
     old[(Old WordPress site)] -. bvcc:import-wp .-> db
-    member([Member]) -. Phase 3: accounts and online booking .-> services
+    member([Member]) -- "F-50: login, sign-up" --> site
+    member -. Phase 3: online joining and booking .-> services
     gateway[Payment gateway] -. Phase 4 .-> services
 ```
 

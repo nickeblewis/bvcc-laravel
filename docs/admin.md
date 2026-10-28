@@ -10,8 +10,9 @@ Give the club's volunteers one place to run the club day to day: who is a
 member, what is on, who is coming, who has paid, who to chase.
 
 It does not take money. Payments are made by bank transfer, cash or PayPal
-outside the system and **recorded** here (Phase 4 adds a gateway). Members do
-not log in yet (Phase 3): staff enter bookings that arrive by email.
+outside the system and **recorded** here (Phase 4 adds a gateway). Members can
+log in and sign up (F-50, [members.md](members.md)), but can't book online
+yet: staff enter bookings that arrive by email.
 
 The admin is built for a desktop, but the register and "record payment" work
 on a phone, because they are used at the waterside.
@@ -57,8 +58,9 @@ erDiagram
 
 Notes:
 
-- `User` is a staff login with a role. `Member` is a person. They are not
-  linked until F-50.
+- `User` is a login with a role. `Member` is a person. A member's own login
+  links to their record through `users.member_id` (F-50). Staff logins may
+  have no member record.
 - What is owed is worked out, never stored: a booking's total is the sum of
   its attendees' prices; a membership's is its price. Paid is the sum of
   payments. The status is kept in step by `refreshStatus()`.
@@ -115,8 +117,10 @@ bookings, so refunds can be recorded against them.
 | Welfare officer        | ✓       | ✓               |             |        | ✓        |          |         |       |          |
 | Session or trip leader |         | own events only |             | ✓      | ✓        |          |         |       |          |
 | Website editor         |         |                 |             |        |          |          | ✓       | ✓     |          |
+| Member                 |         |                 |             |        |          |          |         |       |          |
 
-The table is `UserRole::areas()`.
+The table is `UserRole::areas()`. The Member role (F-50) has no areas: members
+see only their own My membership page. See [members.md](members.md).
 
 ## Features
 
@@ -131,7 +135,7 @@ Acceptance criteria:
 - It refuses a login that has no staff role.
 - It shows every admin page to an administrator.
 - It limits each role to its own areas, by address as well as in the menu.
-- It does not offer public registration.
+- Member sign-up is a separate thing: see [members.md](members.md).
 
 ### F-31 Members
 

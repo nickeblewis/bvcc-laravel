@@ -161,6 +161,8 @@ return [
     */
 
     'features' => [
+        // F-50: members sign up at /register and pick a membership tier.
+        Features::registration(),
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([

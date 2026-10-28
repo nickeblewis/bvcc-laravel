@@ -18,6 +18,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rules\Password;
 use UnitEnum;
 
@@ -40,13 +41,24 @@ class UserResource extends Resource
         return Area::Settings;
     }
 
+    /**
+     * Member logins (F-50) are not staff, so they are left out of this list.
+     *
+     * @return Builder<User>
+     */
+    public static function getEloquentQuery(): Builder
+    {
+        return User::query()
+            ->where(fn (Builder $query) => $query->whereNull('role')->orWhere('role', '!=', UserRole::Member));
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             TextInput::make('name')->required()->maxLength(255),
             TextInput::make('email')->email()->required()->unique(ignoreRecord: true)->maxLength(255),
             Select::make('role')
-                ->options(UserRole::class)
+                ->options(collect(UserRole::staff())->mapWithKeys(fn (UserRole $role): array => [$role->value => $role->getLabel()]))
                 ->helperText('Decides which parts of the admin this person sees. Only welfare officers and administrators see medical details.')
                 ->required(),
             TextInput::make('password')

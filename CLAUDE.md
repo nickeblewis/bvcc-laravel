@@ -80,5 +80,9 @@ The code is the spec. If the doc and code disagree, fix the doc.
   `routes/web.php`.
 - **Dates** are stored and shown in UK time (`Europe/London`) and are
   immutable Carbon objects. Format them on the server, in `Present`.
-- The starter kit's account pages (`/login`, `/settings`) are kept for member
-  logins in Phase 3. Staff sign in at `/admin/login`. Public registration is off.
+- **Member accounts** (F-50, `docs/members.md`): members log in and sign up at
+  `/login` and `/register` (Fortify, drawn as `site/account/*` pages), and use
+  the admin with the `Member` role, which has no areas. Staff sign in at
+  `/admin/login`. The admin needs a verified email, so staff logins you create
+  must be marked verified (`markEmailAsVerified()`); `email_verified_at` is not
+  fillable.

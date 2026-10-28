@@ -17,6 +17,10 @@ const site = computed(() => page.props.site);
 const menuOpen = ref(false);
 const { resolvedAppearance, updateAppearance } = useAppearance();
 
+// F-50: members log in from the main navigation. Once logged in, the link
+// goes to their account in the admin, which is not an Inertia page.
+const loggedIn = computed(() => Boolean(page.props.auth?.user));
+
 const isCurrent = (href: string) =>
     page.url === href || page.url.startsWith(`${href}/`);
 
@@ -112,6 +116,28 @@ onUnmounted(() => stopListening?.());
                                 >{{ item.label }}</Link
                             >
                         </li>
+                        <li>
+                            <a
+                                v-if="loggedIn"
+                                href="/admin"
+                                class="flex min-h-11 items-center rounded-full px-3 font-semibold whitespace-nowrap transition-colors hover:bg-white/10"
+                                >My account</a
+                            >
+                            <Link
+                                v-else
+                                href="/login"
+                                class="flex min-h-11 items-center rounded-full px-3 font-semibold whitespace-nowrap transition-colors hover:bg-white/10"
+                                :class="{
+                                    'bg-white/10 text-gold-400':
+                                        isCurrent('/login') ||
+                                        isCurrent('/register'),
+                                }"
+                                :aria-current="
+                                    isCurrent('/login') ? 'page' : undefined
+                                "
+                                >Login</Link
+                            >
+                        </li>
                     </ul>
                 </nav>
 
@@ -158,6 +184,29 @@ onUnmounted(() => stopListening?.());
                                                 : undefined
                                         "
                                         >{{ item.label }}</Link
+                                    >
+                                </li>
+                                <li>
+                                    <a
+                                        v-if="loggedIn"
+                                        href="/admin"
+                                        class="flex min-h-14 items-center font-display text-2xl font-bold"
+                                        >My account</a
+                                    >
+                                    <Link
+                                        v-else
+                                        href="/login"
+                                        class="flex min-h-14 items-center font-display text-2xl font-bold"
+                                        :class="{
+                                            'text-gold-400':
+                                                isCurrent('/login'),
+                                        }"
+                                        :aria-current="
+                                            isCurrent('/login')
+                                                ? 'page'
+                                                : undefined
+                                        "
+                                        >Login</Link
                                     >
                                 </li>
                             </ul>
